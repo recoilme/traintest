@@ -5065,6 +5065,7 @@ def line_to_prompt_dict(line: str) -> dict:
 
 def sample_images_common(
     pipe_class,
+    default_scheduler,
     accelerator: Accelerator,
     args: argparse.Namespace,
     epoch,
@@ -5126,12 +5127,7 @@ def sample_images_common(
         with open(args.sample_prompts, "r", encoding="utf-8") as f:
             prompts = json.load(f)
 
-    # schedulers: dict = {}  cannot find where this is used
-    default_scheduler = get_my_scheduler(
-        sample_sampler=args.sample_sampler,
-        v_parameterization=args.v_parameterization,
-    )
-
+    # schedulers: dict = {}  cannot find where this is used 
     pipeline = pipe_class(
         text_encoder=text_encoder,
         vae=vae,

@@ -132,8 +132,8 @@ class NetworkTrainer:
             if param.grad is not None:
                 param.grad = accelerator.reduce(param.grad, reduction="mean")
 
-    def sample_images(self, accelerator, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet):
-        train_util.sample_images(accelerator, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet)
+    def sample_images(self, accelerator, scheduler, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet):
+        train_util.sample_images(accelerator, scheduler, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet)
 
     def train(self, args):
         session_id = random.randint(0, 2**32)
@@ -789,7 +789,7 @@ class NetworkTrainer:
                 os.remove(old_ckpt_file)
 
         # For --sample_at_first
-        self.sample_images(accelerator, args, 0, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
+        self.sample_images(accelerator, noise_scheduler, args, 0, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
 
         # training loop
         for epoch in range(num_train_epochs):
@@ -909,7 +909,7 @@ class NetworkTrainer:
                     progress_bar.update(1)
                     global_step += 1
 
-                    self.sample_images(accelerator, args, None, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
+                    self.sample_images(accelerator, noise_scheduler, args, None, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
 
                     # 指定ステップごとにモデルを保存
                     if args.save_every_n_steps is not None and global_step % args.save_every_n_steps == 0:
@@ -963,7 +963,7 @@ class NetworkTrainer:
                     if args.save_state:
                         train_util.save_and_remove_state_on_epoch_end(args, accelerator, epoch + 1)
 
-            self.sample_images(accelerator, args, epoch + 1, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
+            self.sample_images(accelerator, noise_scheduler, args, epoch + 1, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
 
             # end of epoch
 
