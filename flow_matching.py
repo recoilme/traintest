@@ -90,7 +90,7 @@ class FlowMatchingEulerScheduler(SchedulerMixin, ConfigMixin):
 
         return noised_sample
 
-    def set_timesteps(self, num_inference_steps: int = 100) -> None:
+    def set_timesteps(self, num_inference_steps: int = 100, device=None) -> None:
         """
         Set number of inference steps (Euler intagration steps)
 
