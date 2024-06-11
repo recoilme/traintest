@@ -4885,7 +4885,7 @@ def get_timesteps_and_huber_c(args, min_timestep, max_timestep, noise_scheduler,
     timesteps = torch.randint(min_timestep, max_timestep, (1,), device="cpu").to(dtype=torch.float32) / noise_scheduler.num_inference_steps
     huber_c = 1
 
-    return timesteps, huber_c
+    return timesteps.to(device), huber_c
 
 
 def get_noise_noisy_latents_and_timesteps(args, noise_scheduler, latents):
