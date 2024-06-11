@@ -871,7 +871,7 @@ class NetworkTrainer:
                             weight_dtype,
                         )
 
-                    target = noise_scheduler.get_velocity(latents, noise, timesteps)
+                    target = noise_scheduler.get_velocity(latents, noise)
 
                     loss = train_util.conditional_loss(
                         noise_pred.float(), target.float(), reduction="none", loss_type=args.loss_type, huber_c=huber_c
