@@ -84,7 +84,7 @@ class FlowMatchingEulerScheduler(SchedulerMixin, ConfigMixin):
                 Where x_1 is a target distribution, x_0 is a source distribution and t (timestep) ∈ [0, 1]
         """
 
-        t = get_time_coefficients(timestep, original_samples.ndim).to(noised_sample.device)
+        t = get_time_coefficients(timestep, original_samples.ndim).to(original_samples.device)
 
         noised_sample = t * original_samples + (1 - t) * noise
 
