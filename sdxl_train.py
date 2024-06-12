@@ -23,6 +23,8 @@ import library.train_util as train_util
 
 from library.utils import setup_logging, add_logging_arguments
 
+from flow_matching import FlowMatchingEulerScheduler
+
 setup_logging()
 import logging
 
@@ -488,12 +490,7 @@ def train(args):
     progress_bar = tqdm(range(args.max_train_steps), smoothing=0, disable=not accelerator.is_local_main_process, desc="steps")
     global_step = 0
 
-    noise_scheduler = DDPMScheduler(
-        beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", num_train_timesteps=1000, clip_sample=False
-    )
-    prepare_scheduler_for_custom_training(noise_scheduler, accelerator.device)
-    if args.zero_terminal_snr:
-        custom_train_functions.fix_noise_scheduler_betas_for_zero_terminal_snr(noise_scheduler)
+    noise_scheduler = FlowMatchingEulerScheduler(1000)
 
     if accelerator.is_main_process:
         init_kwargs = {}
@@ -505,7 +502,7 @@ def train(args):
 
     # For --sample_at_first
     sdxl_train_util.sample_images(
-        accelerator, args, 0, global_step, accelerator.device, vae, [tokenizer1, tokenizer2], [text_encoder1, text_encoder2], unet
+        accelerator, noise_scheduler, args, 0, global_step, accelerator.device, vae, [tokenizer1, tokenizer2], [text_encoder1, text_encoder2], unet
     )
 
     loss_recorder = train_util.LossRecorder()
@@ -653,6 +650,7 @@ def train(args):
 
                 sdxl_train_util.sample_images(
                     accelerator,
+                    noise_scheduler,
                     args,
                     None,
                     global_step,
@@ -735,6 +733,7 @@ def train(args):
 
         sdxl_train_util.sample_images(
             accelerator,
+            noise_scheduler,
             args,
             epoch + 1,
             global_step,

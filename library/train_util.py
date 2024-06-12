@@ -5065,8 +5065,8 @@ def line_to_prompt_dict(line: str) -> dict:
 
 def sample_images_common(
     pipe_class,
-    default_scheduler,
     accelerator: Accelerator,
+    default_scheduler,
     args: argparse.Namespace,
     epoch,
     steps,
