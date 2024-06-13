@@ -134,6 +134,7 @@ class NetworkTrainer:
 
     def sample_images(self, accelerator, scheduler, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet):
         train_util.sample_images(accelerator, scheduler, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet)
+        scheduler.set_timesteps(1000)
 
     def train(self, args):
         session_id = random.randint(0, 2**32)
@@ -790,6 +791,7 @@ class NetworkTrainer:
 
         # For --sample_at_first
         self.sample_images(accelerator, noise_scheduler, args, 0, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
+        print("noise_scheduler timesteps:", noise_scheduler.num_inference_steps)
 
         # training loop
         for epoch in range(num_train_epochs):
@@ -871,7 +873,7 @@ class NetworkTrainer:
                             weight_dtype,
                         )
 
-                    target = noise_scheduler.get_velocity(latents, noise)
+                    target = noise
 
                     loss = train_util.conditional_loss(
                         noise_pred.float(), target.float(), reduction="none", loss_type=args.loss_type, huber_c=huber_c
@@ -910,6 +912,7 @@ class NetworkTrainer:
                     global_step += 1
 
                     self.sample_images(accelerator, noise_scheduler, args, None, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
+                    print("noise_scheduler timesteps:", noise_scheduler.num_inference_steps)
 
                     # 指定ステップごとにモデルを保存
                     if args.save_every_n_steps is not None and global_step % args.save_every_n_steps == 0:
@@ -964,6 +967,8 @@ class NetworkTrainer:
                         train_util.save_and_remove_state_on_epoch_end(args, accelerator, epoch + 1)
 
             self.sample_images(accelerator, noise_scheduler, args, epoch + 1, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
+            print("noise_scheduler timesteps:", noise_scheduler.num_inference_steps)
+            
 
             # end of epoch
 
