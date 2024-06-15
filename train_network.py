@@ -134,7 +134,6 @@ class NetworkTrainer:
 
     def sample_images(self, accelerator, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet):
         train_util.sample_images(accelerator, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet)
-        scheduler.set_timesteps(1000)
 
     def train(self, args):
         session_id = random.randint(0, 2**32)
