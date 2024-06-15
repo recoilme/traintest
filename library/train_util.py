@@ -4882,7 +4882,7 @@ def get_timesteps_and_huber_c(args, min_timestep, max_timestep, noise_scheduler,
     # TODO: if a huber loss is selected, it will use constant timesteps for each batch
     # as. In the future there may be a smarter way
 
-    timesteps = torch.randint(min_timestep, max_timestep, (1,), device="cpu").to(dtype=torch.float32) / noise_scheduler.num_inference_steps
+    timesteps = torch.randint(min_timestep, max_timestep, (1,), device="cpu").to(dtype=torch.float32)
     huber_c = 1
 
     return timesteps.to(device), huber_c
@@ -4909,7 +4909,9 @@ def get_noise_noisy_latents_and_timesteps(args, noise_scheduler, latents):
 
     timesteps, huber_c = get_timesteps_and_huber_c(args, min_timestep, max_timestep, noise_scheduler, b_size, latents.device)
 
-    noisy_latents = noise_scheduler.add_noise(latents, noise, timesteps)
+    noise_scheduler_timesteps = timesteps / noise_scheduler.num_inference_steps
+
+    noisy_latents = noise_scheduler.add_noise(latents, noise, noise_scheduler_timesteps)
 
     return noise, noisy_latents, timesteps, huber_c
 
@@ -5066,7 +5068,6 @@ def line_to_prompt_dict(line: str) -> dict:
 def sample_images_common(
     pipe_class,
     accelerator: Accelerator,
-    default_scheduler,
     args: argparse.Namespace,
     epoch,
     steps,
@@ -5128,6 +5129,10 @@ def sample_images_common(
             prompts = json.load(f)
 
     # schedulers: dict = {}  cannot find where this is used 
+    default_scheduler = get_my_scheduler(
+        sample_sampler=args.sample_sampler,
+        v_parameterization=args.v_parameterization,
+    )
     pipeline = pipe_class(
         text_encoder=text_encoder,
         vae=vae,

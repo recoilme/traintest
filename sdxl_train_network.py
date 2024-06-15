@@ -165,7 +165,7 @@ class SdxlNetworkTrainer(train_network.NetworkTrainer):
         return noise_pred
 
     def sample_images(self, accelerator, scheduler, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet):
-        sdxl_train_util.sample_images(accelerator, scheduler, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet)
+        sdxl_train_util.sample_images(accelerator, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet)
         scheduler.set_timesteps(1000)
 
 

@@ -86,7 +86,7 @@ class FlowMatchingEulerScheduler(SchedulerMixin, ConfigMixin):
 
         t = get_time_coefficients(timestep, original_samples.ndim).to(original_samples.device)
 
-        noised_sample = t * original_samples + (1 - t) * noise
+        noised_sample = t * original_samples + (1 - t) * noise # noisy_model_input = sigmas * noise + (1.0 - sigmas) * model_input
 
         return noised_sample
 

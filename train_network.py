@@ -133,7 +133,7 @@ class NetworkTrainer:
                 param.grad = accelerator.reduce(param.grad, reduction="mean")
 
     def sample_images(self, accelerator, scheduler, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet):
-        train_util.sample_images(accelerator, scheduler, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet)
+        train_util.sample_images(accelerator, args, epoch, global_step, device, vae, tokenizer, text_encoder, unet)
         scheduler.set_timesteps(1000)
 
     def train(self, args):
@@ -790,7 +790,7 @@ class NetworkTrainer:
                 os.remove(old_ckpt_file)
 
         # For --sample_at_first
-        self.sample_images(accelerator, noise_scheduler, args, 0, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
+        self.sample_images(accelerator, args, 0, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
         print("noise_scheduler timesteps:", noise_scheduler.num_inference_steps)
 
         # training loop
@@ -911,7 +911,7 @@ class NetworkTrainer:
                     progress_bar.update(1)
                     global_step += 1
 
-                    self.sample_images(accelerator, noise_scheduler, args, None, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
+                    self.sample_images(accelerator, args, None, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
                     print("noise_scheduler timesteps:", noise_scheduler.num_inference_steps)
 
                     # 指定ステップごとにモデルを保存
@@ -966,7 +966,7 @@ class NetworkTrainer:
                     if args.save_state:
                         train_util.save_and_remove_state_on_epoch_end(args, accelerator, epoch + 1)
 
-            self.sample_images(accelerator, noise_scheduler, args, epoch + 1, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
+            self.sample_images(accelerator, args, epoch + 1, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
             print("noise_scheduler timesteps:", noise_scheduler.num_inference_steps)
             
 
