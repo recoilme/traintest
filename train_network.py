@@ -790,7 +790,6 @@ class NetworkTrainer:
 
         # For --sample_at_first
         self.sample_images(accelerator, args, 0, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
-        print("noise_scheduler timesteps:", noise_scheduler.num_inference_steps)
 
         # training loop
         for epoch in range(num_train_epochs):
@@ -911,7 +910,6 @@ class NetworkTrainer:
                     global_step += 1
 
                     self.sample_images(accelerator, args, None, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
-                    print("noise_scheduler timesteps:", noise_scheduler.num_inference_steps)
 
                     # 指定ステップごとにモデルを保存
                     if args.save_every_n_steps is not None and global_step % args.save_every_n_steps == 0:
@@ -966,7 +964,6 @@ class NetworkTrainer:
                         train_util.save_and_remove_state_on_epoch_end(args, accelerator, epoch + 1)
 
             self.sample_images(accelerator, args, epoch + 1, global_step, accelerator.device, vae, tokenizer, text_encoder, unet)
-            print("noise_scheduler timesteps:", noise_scheduler.num_inference_steps)
             
 
             # end of epoch
