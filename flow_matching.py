@@ -61,10 +61,11 @@ class FlowMatchingEulerScheduler(SchedulerMixin, ConfigMixin):
     """
 
     @register_to_config
-    def __init__(self, num_inference_steps: int = 100):
+    def __init__(self, num_inference_steps: int = 100,prediction_type="v_prediction"):
         self.timesteps = None
         self.num_inference_steps = None
         self.h = None
+        self.prediction_type = "v_prediction"
 
         if num_inference_steps is not None:
             self.set_timesteps(num_inference_steps)
