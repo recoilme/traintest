@@ -802,11 +802,6 @@ def setup_parser() -> argparse.ArgumentParser:
     )
 
 
-    parser.add_argument(
-        "--v_parameterization",
-        action="store_true",
-        help="enable velocity prediction",
-    )
 
     parser.add_argument(
         "--learning_rate_te2",
