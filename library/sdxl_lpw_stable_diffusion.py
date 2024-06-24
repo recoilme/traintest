@@ -989,6 +989,7 @@ class SdxlStableDiffusionLongPromptWeightingPipeline:
             vector_embedding = torch.cat([text_pool, embs], dim=1).to(dtype)
 
         # 8. Denoising loop
+        print("timesteps: ", timesteps)
         for i, t in enumerate(self.progress_bar(timesteps)):
             # expand the latents if we are doing classifier free guidance
             latent_model_input = torch.cat([latents] * 2) if do_classifier_free_guidance else latents

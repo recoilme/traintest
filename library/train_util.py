@@ -4882,7 +4882,7 @@ def get_timesteps_and_huber_c(args, min_timestep, max_timestep, noise_scheduler,
     # TODO: if a huber loss is selected, it will use constant timesteps for each batch
     # as. In the future there may be a smarter way
 
-    timesteps = torch.randint(min_timestep, max_timestep, (b_size,), device=device).to(torch.float32) / noise_scheduler.num_inference_steps
+    timesteps = torch.randint(min_timestep, max_timestep, (b_size,), device=device)  / noise_scheduler.config.num_inference_steps
     huber_c = 1
 
     return timesteps.to(device), huber_c

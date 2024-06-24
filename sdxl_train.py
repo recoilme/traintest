@@ -601,7 +601,11 @@ def train(args):
                 with accelerator.autocast():
                     noise_pred = unet(noisy_latents, timesteps, text_embedding, vector_embedding)
 
-                target = noise
+                if args.v_parameterization:
+                    # v-parameterization training
+                    target = noise_scheduler.get_velocity(latents, noise, timesteps)
+                else:
+                    target = noise
 
                 if (
                     args.min_snr_gamma
@@ -798,6 +802,14 @@ def setup_parser() -> argparse.ArgumentParser:
         default=None,
         help="learning rate for text encoder 1 (ViT-L) / text encoder 1 (ViT-L)の学習率",
     )
+
+
+    parser.add_argument(
+        "--v_parameterization",
+        action="store_true",
+        help="enable velocity prediction",
+    )
+
     parser.add_argument(
         "--learning_rate_te2",
         type=float,
