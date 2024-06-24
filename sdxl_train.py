@@ -654,7 +654,6 @@ def train(args):
 
                 sdxl_train_util.sample_images(
                     accelerator,
-                    noise_scheduler,
                     args,
                     None,
                     global_step,
@@ -737,7 +736,6 @@ def train(args):
 
         sdxl_train_util.sample_images(
             accelerator,
-            noise_scheduler,
             args,
             epoch + 1,
             global_step,
