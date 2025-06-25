@@ -1,5 +1,29 @@
 This repository contains training, generation and utility scripts for Stable Diffusion.
 
+```
+accelerate==0.25.0
+altair==4.2.2
+diffusers==0.25.0
+easygui==0.98.3
+einops==0.7.0
+ftfy==6.1.1
+huggingface-hub==0.20.1
+imagesize==1.4.1
+lion-pytorch==0.0.6
+numpy==1.26.4
+opencv-python==4.7.0.68
+prodigyopt==1.0
+pytorch-lightning==1.9.0
+safetensors==0.4.2
+tensorboard==2.19.0
+toml==0.10.2
+torch==2.8.0.dev20250319+cu128
+torchaudio==2.6.0.dev20250319+cu128
+transformers==4.36.2
+voluptuous==0.13.1
+```
+
+
 [__Change History__](#change-history) is moved to the bottom of the page. 
 更新履歴は[ページ末尾](#change-history)に移しました。
 
