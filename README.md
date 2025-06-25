@@ -21,6 +21,7 @@ torch==2.8.0.dev20250319+cu128
 torchaudio==2.6.0.dev20250319+cu128
 transformers==4.36.2
 voluptuous==0.13.1
+bitsandbytes==0.47.0.dev0
 ```
 
 
